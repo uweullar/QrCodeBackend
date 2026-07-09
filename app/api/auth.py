@@ -3,18 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.session import get_db
 from app.models.Users import User
-from app.schemas.user import UserCreate, UserOut
-from app.core.security import hash_password
-from app.schemas.user import (
-    UserCreate,
-    UserOut,
-    Token,
-)  # Добавь Token в импорт вверху файла
-from app.core.security import (
-    hash_password,
-    verify_password,
-    create_access_token,
-)  # Обнови импорт
+from app.schemas.user import UserCreate, UserOut, Token
+from app.core.security import hash_password, verify_password, create_access_token
+
 
 
 router = APIRouter(prefix="/auth", tags=["Auth (Авторизация)"])
