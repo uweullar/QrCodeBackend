@@ -12,9 +12,8 @@ router = APIRouter(prefix="/auth", tags=["Auth (Авторизация)"])
 
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
-async def register_user(user_date: UserCreate, db: AsyncSession = Depends(get_db)):
-
-    query = select(User).where(User.email == user_date.email)
+async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db)): # <- Здесь исправила букву d
+    query = select(User).where(User.email == user_data.email)
     result = await db.execute(query)
     existing_user = result.scalar_one_or_none()
 
@@ -25,7 +24,7 @@ async def register_user(user_date: UserCreate, db: AsyncSession = Depends(get_db
         )
 
     new_user = User(
-        email=user_date.email, password_hash=hash_password(user_date.password)
+        email=user_data.email, password_hash=hash_password(user_data.password)
     )
 
     db.add(new_user)
@@ -33,7 +32,6 @@ async def register_user(user_date: UserCreate, db: AsyncSession = Depends(get_db
     await db.refresh(new_user)
 
     return new_user
-
 
 @router.post("/login", response_model=Token)
 async def login_user(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
