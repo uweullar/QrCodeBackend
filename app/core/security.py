@@ -3,15 +3,26 @@ import hashlib
 import jwt
 from app.core.config import settings
 from passlib.context import CryptContext
-
+import bcrypt
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
+
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Переводим строку в байты
+    password_bytes = password.encode('utf-8')
+    # Генерируем соль
+    salt = bcrypt.gensalt()
+    # Хешируем и декодируем обратно в строку для сохранения в БД
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    return hashed.decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    # Переводим обе строки в байты для проверки
+    password_bytes = plain_password.encode('utf-8')
+    hashed_bytes = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_bytes, hashed_bytes)
 
 
 def create_access_token(data: dict, expires_delta: datetime.timedelta = None) -> str:
