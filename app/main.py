@@ -19,12 +19,19 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="QR Code Service API", lifespan=lifespan)
 
+# Список разрешенных адресов
+origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://qr-code-frontend-tau.vercel.app",  # Твой фронтенд на Vercel
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS,  # берём из .env / переменных Render
+    allow_origins=origins,  # Разрешаем запросы с этих сайтов
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],    # Разрешаем любые методы (GET, POST и т.д.)
+    allow_headers=["*"],    # Разрешаем любые заголовки
 )
 
 app.include_router(auth_router, prefix="/api")

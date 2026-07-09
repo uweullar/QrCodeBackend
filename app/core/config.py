@@ -6,12 +6,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = BASE_DIR / ".env"
 
-# НАДЖОРНЫЙ ПРИНТ: Выведет точный путь в консоль перед падением
-print("\n" + "="*50)
-print(f"🔍 Я ищу файл .env по этому пути:\n👉 {ENV_PATH}")
-print(f"📋 Файл реально существует?: {'✅ ДА' if ENV_PATH.exists() else '❌ НЕТ'}")
-print("="*50 + "\n")
-
 class Settings(BaseSettings):
     DATABASE_URL: str
     SECRET_KEY: str
